@@ -1,5 +1,8 @@
-from lib import os, sys, time, platform
-from json_coding import *
+from client.lib import *
+from client.json_coding import *
+
+desc = os.path.dirname(os.path.dirname(__file__))
+create_descriptor = os.path.join(desc, "config", "files", "user_data.json")
 
 class CreateDataCollection:
 
@@ -37,9 +40,6 @@ class CreateDataCollection:
 
         try:
 
-            desc = os.path.dirname(os.path.dirname(__file__))
-            create_descriptor = os.path.join(desc, "config", "files", "user_data.json")
-
             with open(create_descriptor, "w+") as w_file:
 
                 js_coding = run_json(state=1, value=data)
@@ -48,8 +48,4 @@ class CreateDataCollection:
         except Exception as err:
             print(f"Произошла ошибка, при записи файла: {err}")
 
-create_data = CreateDataCollection()
-
-get_data = create_data.data_intilization()
-wr_file = create_data.write_file(get_data)
 

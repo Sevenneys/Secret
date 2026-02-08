@@ -1,4 +1,4 @@
-from lib import json
+import json
 
 def run_json(*, state: int, value: dict) -> str:
     
