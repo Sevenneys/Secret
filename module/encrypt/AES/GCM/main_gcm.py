@@ -16,7 +16,7 @@ def generate_vectors():
     }
 
 def main_gcm():
-
+    
     add_file_path = input(f"Укажите файл для шифрования: ")
 
     if os.path.exists(add_file_path):

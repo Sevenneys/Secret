@@ -1,5 +1,6 @@
 from lib import *
 from path import *
+import shutil
 
 def decrypt_gcm():
 
@@ -13,7 +14,36 @@ def decrypt_gcm():
     create_full_path = os.path.join(PATH_DIRECTORY_FILES, get_title_file)
 
     if os.path.isdir(create_full_path):
-        print(f"Директория: {create_full_path} - существует!")
+
+        get_path_key = os.path.join(create_full_path, 'aes_key.bin')
+        
+        try:
+            with open(get_path_key, 'rb') as f_rb:
+                set_key = f_rb.read()
+
+            with open(encrypt_file, 'rb') as f_rb:
+                get_full_data = f_rb.read()
+                nonce = get_full_data[:12]
+                encrypt_text = get_full_data[12:]
+
+        except Exception as er:
+            print(f"Ошибка - файл {encrypt_file} не найден..")
+
+        aescgm = AESGCM(set_key)
+
+        try:
+            plaintext = aescgm.decrypt(nonce, encrypt_text, None)
+
+            with open(encrypt_file, "wb") as f_wb:
+                f_wb.write(plaintext)
+
+            shutil.rmtree(create_full_path)
+
+            print("Файл успешно дешифрован!")
+
+        except InvalidTag as er:
+            print(f"При дешифровании файла произошла ошибка: {er}")
+
     else:
         print(f"Директория: {create_full_path} - не существует!")
 
