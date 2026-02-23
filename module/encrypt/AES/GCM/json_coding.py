@@ -10,7 +10,3 @@ def run_json(*, state: int, value: dict) -> str:
         print(f"Неверное значение..\n\n1 - кодированние\n0 - декодированние")
 
 
-
-
-
-

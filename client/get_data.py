@@ -1,5 +1,5 @@
 from client.lib import *
-from client.json_coding import *
+from module.encrypt.AES.GCM.json_coding import *
 
 desc = os.path.dirname(os.path.dirname(__file__))
 create_descriptor = os.path.join(desc, "config", "files", "user_data.json")

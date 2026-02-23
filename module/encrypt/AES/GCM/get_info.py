@@ -1,6 +1,8 @@
 from lib import os, platform
 from json_coding import *
 
+# Сделать класс
+
 def create_info_system():
 
     oc = platform.system()
@@ -9,4 +11,12 @@ def create_info_system():
 
     return {'oc': oc, 'username': username, 'host': host}
 
+def write_info(absolute_path: str, sys_info: str) -> str:
 
+    if not os.path.exists(absolute_path):
+        try:
+            with open(absolute_path, "w+", encoding="utf-8") as f_wr:
+                f_wr.write(sys_info)
+                
+        except Exception as err:
+            print(f"При записи файла произошла ошибка: {Exception}")
