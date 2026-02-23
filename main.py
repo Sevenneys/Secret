@@ -5,15 +5,6 @@ create_in = ConsoleInterface(version="v 2.1")
 
 def main():
     
-    # if not os.path.exists(create_descriptor):
-
-    #     create_data = CreateDataCollection()
-    #     get_data = create_data.data_intilization()
-    #     wr_file = create_data.write_file(get_data)
-    
-    # else:
-    #     print("Файл существует!")
-
     try:
 
         while True:
