@@ -1,64 +1,28 @@
-from client.get_data import *
 from client.ui.interface import *
+# from module.encrypt.AES.GCM.main_gcm import *
+import time
+import sys
 
-create_in = ConsoleInterface(version="v 2.1")
+class RunMainProject:
 
-def main():
-    
-    try:
+    def __init__(self):
+        self.__ui_result = create_interface.create_main_menu()
 
-        while True:
-            res_main_menu = create_in.create_main_menu()
+    def run_user_mode(self):
 
-            if res_main_menu == "0":
-                print("Завершаем программу..")
-                time.sleep(1)
-                sys.exit()
-            
-            elif res_main_menu == "1":
-                
-                while True:
+        if self.__ui_result == "0":
+            print(f"DEBUG: завершение программы..")
+            time.sleep(0.5)
+            sys.exit()
 
-                    res_algo_encr = create_in.encrypt_interface()
+        elif self.__ui_result == "1":
+            #запуск main_gcm
+            print(f"Запускаем gcm..")
 
-                    if res_algo_encr == "0":
-                        print("Шаг назад..")
-                        time.sleep(1)
-                        break
-                    
-                    elif res_algo_encr == "1":
-                        pass
+        elif self.__ui_result == "2":
+            #запуск кодирования
+            print(f"Запускаем кодирование..")
 
-                    else:
-                        print()
-
-                        print("=====================================")
-                        print(f"\nНеверная комманда..\n")
-                        print("=====================================")
-                
-                        print()
-
-                        time.sleep(1)
-
-            elif res_main_menu == "2":
-                print("Переходим в кодированние")
-
-            else:
-                print()
-
-                print("=====================================")
-                print(f"\nНеверная комманда..\n")
-                print("=====================================")
-                
-                print()
-
-                time.sleep(1)
-
-    except KeyboardInterrupt as err:
-        print("CTRL + C")
-        print("Выходим из программы..\n")
-        time.sleep(1)
-        sys.exit()
-
-if __name__ == "__main__":
-    main()
+if __name__ == '__main__':
+    create_interface = MainConsoleInterface(version="v 2.1")
+    create_main = RunMainProject().run_user_mode()
