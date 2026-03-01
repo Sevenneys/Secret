@@ -1,11 +1,6 @@
-# Реализовать функцию по созданию хэша пароля для аутентификации (передать булевый результат).
-# Функция аутентификации всех вводных данных.
-
-# Далее идём к созданию хэша файла, куда записан хэш пароля.
-
 import hashlib
 import time
-from path import *
+from module.encrypt.AES.GCM.path import *
 
 def validation_of_password():
 
@@ -61,14 +56,3 @@ def create_verify_hash_password(set_salt: bytes, set_orig_hash: bytes, set_passw
     )
 
     return password_hash == set_orig_hash
-
-# set_password = 'qwerty12345'
-# confirm_password = 'qwerty12345'
-
-# salt, hash_password = create_hash_password(set_password)
-# is_verify_hash = create_verify_hash_password(salt, hash_password, confirm_password)
-
-# if is_verify_hash:
-#     print("Пароли совпадают!")
-# else:
-#     print("Пароли не совпадают!")

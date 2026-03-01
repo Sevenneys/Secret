@@ -1,5 +1,5 @@
 from client.ui.interface import *
-# from module.encrypt.AES.GCM.main_gcm import *
+from module.encrypt.AES.GCM.main_gcm import *
 import time
 import sys
 

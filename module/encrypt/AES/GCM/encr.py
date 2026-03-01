@@ -1,4 +1,4 @@
-from lib import *
+from module.encrypt.AES.GCM.lib import *
 
 def encrypt_gcm(*, vectors: dict, absolute_path_key: str, absolute_path_file: str) -> bytes:
     

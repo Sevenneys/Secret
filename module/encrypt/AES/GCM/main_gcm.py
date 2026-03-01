@@ -1,9 +1,10 @@
-from lib import *
-from path import *
-from get_info import *
-from json_coding import *
-from KDF.pbkdf2 import *
-from encr import *
+
+from module.encrypt.AES.GCM.lib import *
+from module.encrypt.AES.GCM.path import *
+from module.encrypt.AES.GCM.get_info import *
+from module.encrypt.AES.GCM.json_coding import *
+from module.encrypt.AES.GCM.KDF.pbkdf2 import *
+from module.encrypt.AES.GCM.encr import *
 
 def generate_vectors():
 
@@ -57,6 +58,5 @@ def main_gcm():
     else:
         print(f"Указанный файл - не найден..")
 
-main_gcm()
 
 
