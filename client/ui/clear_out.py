@@ -1,5 +1,7 @@
-import subprocess
-import os
+# import subprocess
+# import os
+
+from library.lib import subprocess, os
 
 class ClearConsole:
 

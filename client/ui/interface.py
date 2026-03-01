@@ -1,7 +1,6 @@
-import pyfiglet
-import os
-import time
-import sys
+
+from library.lib import pyfiglet, os, time, sys
+
 class MainConsoleInterface:
 
     INFO = ['0 - [завершить программу]', '1 - [шифрование/дешифрование]', '2 - [кодирование/декодирование]']
@@ -16,23 +15,25 @@ class MainConsoleInterface:
         
     def create_main_menu(self):
 
-        while True:
-            try:
-                print("-------------------------------------\n")
+        try:
+            print("-------------------------------------\n")
 
-                for element in self.INFO:
-                    print(element)
+            for element in self.INFO:
+                print(element)
 
-                print(f"\n-------------------------------------\n")
+            print(f"\n-------------------------------------\n")
 
-                return input(f"{os.getlogin()}: ")
+            return input(f"{os.getlogin()}: ")
                 
-            except KeyboardInterrupt:
-                print(f"\n\nINFO: сочетание клавиш CTRL + C\nDEBUG: завершаем программу..\n")
-                time.sleep(0.5)
-                sys.exit()
-            except Exception as er:
-                print(f"ERROR: неожиданное исключение {er}")
+        except KeyboardInterrupt:
+            print(f"\n\nINFO: сочетание клавиш CTRL + C\nDEBUG: завершаем программу..\n")
+            time.sleep(0.5)
+            sys.exit()
+        except Exception as er:
+            print(f"ERROR: неожиданное исключение {er}")
+
+
+
 
         
 

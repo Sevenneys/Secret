@@ -1,10 +1,8 @@
+from library.lib import time, sys, os, platform
+
 from client.ui.interface import *
 from client.ui.clear_out import *
 from module.encrypt.AES.GCM.main_gcm import *
-import time
-import sys
-import os
-import platform
 
 class RunMainProject:
 
@@ -43,8 +41,12 @@ class RunMainProject:
             sys.exit()
 
         elif self.__ui_result == "1":
-            #запуск main_gcm
-            print(f"Запускаем gcm..")
+
+            create_aes_main = MainAesCgm()
+            create_clear_out.clear()
+            create_interface.create_logo()
+            create_aes_main.aescgm_interface()
+            create_clear_out.clear()
 
         elif self.__ui_result == "2":
             #запуск кодирования

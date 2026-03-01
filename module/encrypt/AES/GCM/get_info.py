@@ -1,4 +1,4 @@
-from module.encrypt.AES.GCM.lib import os, platform
+from library.lib import os, platform
 from module.encrypt.AES.GCM.json_coding import *
 
 # Сделать класс
