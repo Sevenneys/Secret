@@ -4,7 +4,7 @@
 # python_path = sys.executable
 # print(python_path)
 
-from datetime import datetime
+import platform
 
-obj_dt = datetime.now()
-print(obj_dt)
+a = platform.system().lower()
+print(a)
