@@ -5,31 +5,30 @@ import sys
 
 class MainConsoleInterface:
 
-    def __init__(self, *, version: str) -> str:
+    INFO = ['0 - [завершить программу]', '1 - [шифрование/дешифрование]', '2 - [кодирование/декодирование]']
+    VALID_MODE = ['0', '1', '2']
 
+    def __init__(self, *, version: str) -> None:
         self._version = version
-        self.f = pyfiglet.figlet_format("SECRET", font='slant')
+        self._banner = pyfiglet.figlet_format("SECRET", font='slant')
 
-        self.info_data = {
-            'info':['0 - [завершить программу]', '1 - [шифрование/дешифрование]', '2 - [кодирование/декодирование]',],
-            'mode': ['0', '1', '2']
-        }
-
+    def create_logo(self):
+        print(f"\n{self._banner}\n                                {self._version}")
+        
     def create_main_menu(self):
-        print(f"{self.f}\n                                {self._version}")
 
         while True:
             try:
                 print("-------------------------------------\n")
 
-                for element in self.info_data.get('info'):
+                for element in self.INFO:
                     print(element)
 
                 print(f"\n-------------------------------------\n")
 
                 user = input(f"{os.getlogin()}: ")
 
-                if user not in self.info_data.get('mode'):
+                if user not in self.VALID_MODE:
                     print(f"ERROR: неверная комманда...\n")
                     time.sleep(0.5)
                 else:
