@@ -3,44 +3,30 @@ import os
 import time
 import sys
 
-class ConsoleInterface:
-
-    f = pyfiglet.figlet_format("SECRET", font='slant')
+class MainConsoleInterface:
 
     def __init__(self, *, version: str) -> str:
 
         self._version = version
+        self.f = pyfiglet.figlet_format("SECRET", font='slant')
+
+        self.info_text = [
+            '0 - [завершить программу]', 
+            '1 - [шифрование/дешифрование]', 
+            '2 - [кодирование/декодирование]',
+            ]
 
     def create_main_menu(self):
 
-        print(self.f)
-        print(f"                                {self._version}")
-        print("-------------------------------------")
+        print(f"{self.f}\n                                {self._version}")
+        print("-------------------------------------\n")
 
-        print()
-
-        print("0 - [завершить программу]")
-        print("1 - [шифрование/дешифрование]")
-        print("2 - [кодированние/декодированние]")
-
-        print()
-        print("-------------------------------------")
-        print()
+        for element in self.info_text:
+            print(element)
+        print(f"\n-------------------------------------\n")
 
         return input(f"{os.getlogin()}: ")
 
-    def encrypt_interface(self):
-
-        print()
-
-        print("-------------------------------------")
-        print("0 - [назад]")
-        print("1 - [AES]")
-        print("-------------------------------------")
-
-        print()
-
-        return input(f"{os.getlogin()}: ")
 
 
 
