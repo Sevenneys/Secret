@@ -2,17 +2,23 @@
 from cryptography.hazmat.primitives.ciphers.aead import AESGCM
 from cryptography.exceptions import InvalidTag
 
+from client.ui.interface import *
+from client.ui.clear_out import *
+
 from library.lib import os, sys, shutil
 
 from module.encrypt.AES.GCM.path import *
 from module.encrypt.AES.GCM.get_info import *
 from module.encrypt.AES.GCM.json_coding import *
 from module.encrypt.AES.GCM.KDF.pbkdf2 import *
-# import shutil
 
 class MainAesCgm:
 
     INFO_AES = ['0 - [шаг назад]', '1 - [шифрование]', '2 - [дешифрование]']
+
+    create_interface = MainConsoleInterface()
+    create_clear_out = ClearConsole()
+    create_clear_out.get_oc()
 
     def __init__(self):
         self.__mode_aes = None
@@ -27,7 +33,10 @@ class MainAesCgm:
 
     # ШИФРОВАНИЕ
     def encrypt(self):
-        add_file_path = input(f"\nУкажите файл для шифрования: \n")
+        print("-------------------------------------")
+        print(f"\nINFO: Укажите файл для шифрования --> \n")
+        print("-------------------------------------")
+        add_file_path = input(f"\n{os.getlogin()}: ")
 
         # Проверяем файл
         if os.path.exists(add_file_path):
@@ -36,6 +45,8 @@ class MainAesCgm:
                     # Получаем полное имя файла 
                     get_file = str(fi)
 
+                print(f"\nDEBUG: получен файл ({get_file})")
+                    
                 try:
                     # Разбиваем имя файла на список и создаём имя для директории
                     list_file = get_file.split(".")
@@ -64,8 +75,12 @@ class MainAesCgm:
                         get_path_file_enc = os.path.join(add_file_path)
 
                         # Вызываем функцию хэширования и передаем дескрипторы
+                        self.create_clear_out.clear()
+                        self.create_interface.create_logo()
                         create_hash_obj = KDF_Pbkdf2(path_salt=get_path_salt, path_hash=get_path_pass_hash)
                         create_hash_obj.create_hash_password()
+                        self.create_clear_out.clear()
+                        self.create_interface.create_logo()
 
                         # Вызываем функцию шифрования, передаём веторы и дескрипторы
                         self.generate_vectors()
@@ -102,7 +117,13 @@ class MainAesCgm:
     
     def decrypt(self):
 
-        encrypt_file = input(f"Укажите файл для дешифрования: ")
+        self.create_clear_out.clear()
+        self.create_interface.create_logo()
+
+        print("-------------------------------------")
+        print(f"\nINFO: Укажите файл для дешифрования >\n")
+        print("-------------------------------------")
+        encrypt_file = input(f"\n{os.getlogin()}: ")
 
         for fi in os.path.split(encrypt_file):
             get_file = str(fi)
@@ -112,8 +133,14 @@ class MainAesCgm:
         create_full_path = os.path.join(PATH_DIRECTORY_FILES, get_title_file)
 
         if os.path.isdir(create_full_path):
-            
-            confirm_password = input(f"Пароль для аутентификации: ")
+
+            self.create_clear_out.clear()
+            self.create_interface.create_logo()
+
+            print("-------------------------------------")
+            print(f"\nINFO: Пароль для аутентификации ---->\n")
+            print("-------------------------------------")
+            confirm_password = input(f"\n{os.getlogin()}: ")
 
             get_salt = os.path.join(create_full_path, 'salt_pass.bin')
             get_origin_pass_hash = os.path.join(create_full_path, 'hash_pass.bin')
@@ -152,7 +179,9 @@ class MainAesCgm:
 
                         shutil.rmtree(create_full_path)
 
-                        print("Файл успешно дешифрован!")
+                        self.create_clear_out.clear()
+                        self.create_interface.create_logo()
+                        print("\nФайл успешно дешифрован!\n")
 
                     except InvalidTag as er:
                         print(f"При дешифровании файла произошла ошибка: {er}")
@@ -186,8 +215,11 @@ class MainAesCgm:
                 print(f"ERROR: неожиданное исключение {er}")
 
             if self.__mode_aes == '0':
+                self.create_clear_out.clear()
                 return
             elif self.__mode_aes == '1':
+                self.create_clear_out.clear()
+                self.create_interface.create_logo()
                 self.encrypt()
             elif self.__mode_aes == '2':
                 self.decrypt()

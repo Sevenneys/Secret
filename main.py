@@ -54,7 +54,7 @@ class RunMainProject:
 
 if __name__ == '__main__':
 
-    create_interface = MainConsoleInterface(version="v 3.1.5")
+    create_interface = MainConsoleInterface()
     create_clear_out = ClearConsole()
 
     create_clear_out.get_oc()

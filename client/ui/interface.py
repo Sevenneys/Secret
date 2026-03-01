@@ -5,8 +5,8 @@ class MainConsoleInterface:
 
     INFO = ['0 - [завершить программу]', '1 - [шифрование/дешифрование]', '2 - [кодирование/декодирование]']
 
-    def __init__(self, *, version: str) -> None:
-        self._version = version
+    def __init__(self):
+        self._version = 'v 3.1.5'
         self._banner = pyfiglet.figlet_format("SECRET", font='slant')
 
     # сделать - берём версию из файла переменного окружения, в коде вручную не пишем!

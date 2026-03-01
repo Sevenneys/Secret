@@ -10,7 +10,10 @@ class KDF_Pbkdf2:
     def create_and_validation_of_password(self):
 
         while True:
-            password_file = input(f"Задайте пароль: ")
+            print("-------------------------------------")
+            print(f"\nINFO: Задайте пароль --------------->\n")
+            print("-------------------------------------")
+            password_file = input(f"\n{os.getlogin()}: ")
 
             if password_file == "":
                 print("\nОшибка при вводе пароля: [пустая строка]\n")
