@@ -15,17 +15,6 @@ class RunMainProject:
         self._logo = create_interface.create_logo()
         self.__ui_result = create_interface.create_main_menu()
 
-    def info_about_platform(self):
-
-        try:
-
-            with open(self.FILE_OC, 'w') as f_w:
-                oc_system = platform.system().lower()
-                f_w.write(oc_system)
-
-        except Exception as err:
-            print(f"ERROR: неожиданное исключение: {err}")
-
     def valid_out_user(self):
         if self.__ui_result not in self.VALID_MODE:
             print(f"\nERROR: неверная комманда...\n")
@@ -57,12 +46,11 @@ if __name__ == '__main__':
     create_interface = MainConsoleInterface()
     create_clear_out = ClearConsole()
 
-    create_clear_out.get_oc()
+    create_clear_out.clear()
 
     while True:
 
         create_main = RunMainProject()
-        create_main.info_about_platform()
         create_main.valid_out_user()
         create_main.run_user_mode()
 

@@ -15,6 +15,7 @@ class KDF_Pbkdf2:
             print("-------------------------------------")
             password_file = input(f"\n{os.getlogin()}: ")
 
+
             if password_file == "":
                 print("\nОшибка при вводе пароля: [пустая строка]\n")
                 time.sleep(1)
@@ -25,6 +26,10 @@ class KDF_Pbkdf2:
 
         in_password = self.create_and_validation_of_password()
 
+        print(f"\nINFO: длина пароля {len(in_password)} символов")
+        time.sleep(0.5)
+        print(f"DEBUG: создаём хэш")
+
         salt = os.urandom(16)
         password_hash = hashlib.pbkdf2_hmac(
             'sha256',
@@ -34,13 +39,19 @@ class KDF_Pbkdf2:
             dklen=256
         )
 
+        time.sleep(0.5)
+        print(f"DEBUG: хэш пароля ({password_hash})")
+        print(f"DEBUG: соль ({salt})")
+
         try:
             with open(self.path_salt, "wb+") as f_wb:
                 f_wb.write(salt)
             with open(self.path_hash, "wb+") as f_wb:
                 f_wb.write(password_hash)
 
-            print(f"\nINFO: пароль успешно создан и захэширован в бинарный файл!\n")
+            print(f"\nINFO: хэш успешно записан в бинарный файл (hash_pass.bin)\n")
+
+            press_enter = input(f"Далее..")
 
         except Exception as er:
             print("При записи файлов - произошла ошибка: {er}")

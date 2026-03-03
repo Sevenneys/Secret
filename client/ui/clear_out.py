@@ -1,24 +1,14 @@
 
-from library.lib import subprocess, os
+from library.lib import subprocess, os, platform
+from typing import Callable
 
 class ClearConsole:
 
     ROOT_PATH = os.path.dirname(os.path.dirname(os.path.dirname(__file__)))
-    FILE_PATH = os.path.join(ROOT_PATH, 'config', 'oc.txt')
+    FILE_PATH = os.path.join(ROOT_PATH, 'config', 'file', 'oc.txt')
 
     def __init__(self) -> None:
-        self.__system = None
-
-    def get_oc(self):
-
-        try:
-            with open(self.FILE_PATH, 'r', encoding='utf-8') as f_r:
-                self.__system = f_r.read()
-
-        except FileNotFoundError:
-            print(f"ERROR: не удалось найти системный файл..")
-        except Exception as er:
-            print(f"ERROR: неожиданное исключение {er}")
+        self.__system = platform.system().lower()
 
     def clear(self):
 

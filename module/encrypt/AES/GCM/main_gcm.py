@@ -18,7 +18,6 @@ class MainAesCgm:
 
     create_interface = MainConsoleInterface()
     create_clear_out = ClearConsole()
-    create_clear_out.get_oc()
 
     def __init__(self):
         self.__mode_aes = None
@@ -46,6 +45,8 @@ class MainAesCgm:
                     get_file = str(fi)
 
                 print(f"\nDEBUG: получен файл ({get_file})")
+                time.sleep(0.5)
+                print(f"DEBUG: размер файла ({os.path.getsize(add_file_path)}B)")
                     
                 try:
                     # Разбиваем имя файла на список и создаём имя для директории
@@ -74,6 +75,8 @@ class MainAesCgm:
                         get_path_key = os.path.join(PATH_IS_DIRECTORY_FILE, 'aes_key.bin')
                         get_path_file_enc = os.path.join(add_file_path)
 
+                        press_enter = input(f"\nДалее...")
+
                         # Вызываем функцию хэширования и передаем дескрипторы
                         self.create_clear_out.clear()
                         self.create_interface.create_logo()
@@ -90,17 +93,33 @@ class MainAesCgm:
                         set_nonce = self.__vectors.get('nonce', 'Ключ: nonce - не найден..')
                         aesgcm = AESGCM(set_key)
 
+                        print(f"\nDEBUG: устанавливаем ключ шифрования ({set_key})")
+                        time.sleep(0.5)
+                        print(f"DEBUG: устанавливаем случайные байты ({set_nonce})")
+                        time.sleep(1)
+
                         try:
                             with open(get_path_key, 'wb') as f_wb:
                                 f_wb.write(set_key)
 
                             with open(get_path_file_enc, 'rb') as f_rb:
                                 data = f_rb.read()
+                                print(f"DEBUG: длинна полученных данных ({len(data)})")
 
                             encrypt_text = aesgcm.encrypt(set_nonce, data, None)
 
                             with open(get_path_file_enc, 'wb') as f_wb:
                                 f_wb.write(set_nonce + encrypt_text)
+                                time.sleep(0.5)
+                                print(f"DEBUG: шифруем данные из файла ( {data} --- 010010110 )")
+
+                            time.sleep(1)
+                            print(f"\nINFO: файл ({get_file}) - зашифрован")
+
+                            press_enter = input(f"\nДалее..\n")
+
+                            self.create_clear_out.clear()
+                            self.create_interface.create_logo()
 
                         except Exception as err:
                             print(f"Er: {err}")
