@@ -3,5 +3,6 @@ cryptography==46.0.4
 DateTime==6.0
 pycparser==3.0
 pyfiglet==1.0.4
+python-dotenv==1.2.2
 pytz==2025.2
 zope.interface==8.2
