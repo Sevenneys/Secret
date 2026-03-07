@@ -1,9 +1,9 @@
 
 from library.lib import pyfiglet, os, time, sys
+from config.paths import ROOT_PATH_PROJECT, PATH_ENV
 from dotenv import load_dotenv
 
-# Поменять на динамический путь
-load_dotenv('/home/seven/dev_projects/PYTHON/Secret/config/.env')
+load_dotenv(PATH_ENV)
 
 class MainConsoleInterface:
 
@@ -18,7 +18,6 @@ class MainConsoleInterface:
         self._version = os.getenv('VERSION_OF_PROJECT', 'Указанная переменная среда не найдена..')
         self._banner = pyfiglet.figlet_format("SECRET", font='slant')
 
-    # сделать - берём версию из файла переменного окружения, в коде вручную не пишем!
     def create_logo(self):
         print(f"\n{self._banner}\n                              {self._version}")
         

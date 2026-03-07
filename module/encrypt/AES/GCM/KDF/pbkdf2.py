@@ -1,11 +1,12 @@
 
-from library.lib import hashlib, time, os
+from library.lib import hashlib, time, os, shutil
 
 class KDF_Pbkdf2:
 
-    def __init__(self, *, path_salt: str, path_hash: str) -> None:
+    def __init__(self, *, path_salt: str, path_hash: str, path_dir: str) -> None:
         self.path_salt = path_salt
         self.path_hash = path_hash
+        self.path_dir = path_dir
     
     def create_and_validation_of_password(self):
 
@@ -53,7 +54,11 @@ class KDF_Pbkdf2:
             time.sleep(1)
 
         except Exception as er:
+            shutil.rmtree(self.path_dir)
             print("При записи файлов - произошла ошибка: {er}")
+        except KeyboardInterrupt:
+            shutil.rmtree(self.path_dir)
+            print("DEBUG: принудительное завершение программы")
                           
     def create_verify_hash_password(self, *, set_salt: bytes, set_orig_hash: bytes, set_password_confirm: str) -> bool:
 

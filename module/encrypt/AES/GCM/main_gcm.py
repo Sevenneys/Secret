@@ -84,7 +84,7 @@ class MainAesCgm:
                         # Вызываем функцию хэширования и передаем дескрипторы
                         self.create_clear_out.clear()
                         self.create_interface.create_logo()
-                        create_hash_obj = KDF_Pbkdf2(path_salt=get_path_salt, path_hash=get_path_pass_hash)
+                        create_hash_obj = KDF_Pbkdf2(path_salt=get_path_salt, path_hash=get_path_pass_hash, path_dir=PATH_IS_DIRECTORY_FILE)
                         create_hash_obj.create_hash_password()
                         self.create_clear_out.clear()
                         self.create_interface.create_logo()
@@ -125,13 +125,17 @@ class MainAesCgm:
                             self.create_interface.create_logo()
 
                         except Exception as err:
+                            shutil.rmtree(PATH_IS_DIRECTORY_FILE)
                             print(f"Er: {err}")
 
                     else:
                         print(f"\nERROR: файл с именем: {title_file} - уже зашифрован!")
                         print(f"INFO: Выберите другой файл или измените название текущему файлу.\n")
                 except Exception as err:
-                    print(f"ERROR: неожиданное исключение: {err}")    
+                    shutil.rmtree(PATH_IS_DIRECTORY_FILE)
+                    print("\n-------------------------------------")
+                    print(f"ERROR: неожиданное исключение: {err}")
+                    print("-------------------------------------\n")    
             else:
                 print(f"Выбранный объект - не является файлов..")
         else:
@@ -177,7 +181,7 @@ class MainAesCgm:
                 with open(get_origin_pass_hash, 'rb') as f_rb:
                     origin_pass_hash = f_rb.read()
 
-                create_hash_obj = KDF_Pbkdf2(path_salt=get_salt, path_hash=get_origin_pass_hash)
+                create_hash_obj = KDF_Pbkdf2(path_salt=get_salt, path_hash=get_origin_pass_hash, path_dir=create_full_path)
                 result_in_hash = create_hash_obj.create_verify_hash_password(set_salt=origin_pass_salt, set_orig_hash=origin_pass_hash, set_password_confirm=confirm_password)
 
                 print(f"\nDEBUG: проверяем исходный хэш")
@@ -199,7 +203,7 @@ class MainAesCgm:
 
                     aescgm = AESGCM(set_key)
                     print(f"DEBUG: дешифруем файл ({get_file})")
-                    time.sleep(1)
+                    time.sleep(0.5)
 
                     try:
                         plaintext = aescgm.decrypt(nonce, encrypt_text, None)
@@ -212,8 +216,8 @@ class MainAesCgm:
                         self.create_clear_out.clear()
                         self.create_interface.create_logo()
                         print("\n-------------------------------------")
-                        print("\nINFO: Файл успешно дешифрован!\n")
-                        print("\n-------------------------------------")
+                        print("INFO: Файл успешно дешифрован!")
+                        print("-------------------------------------\n")
 
                     except InvalidTag as er:
                         print(f"\nПри дешифровании файла произошла ошибка: {er}\n")
