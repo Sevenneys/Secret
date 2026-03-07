@@ -4,12 +4,10 @@ from client.ui.interface import *
 from client.ui.clear_out import *
 from module.encrypt.AES.GCM.main_gcm import *
 from config.objects import *
+from config.paths import *
 
 class RunMainProject:
 
-    # изменить на общий файл путей.
-    ROOT_PROJECT = os.path.dirname(__file__)
-    FILE_OC = os.path.join(ROOT_PROJECT, 'config', 'oc.txt')
     VALID_MODE = ['0', '1', '2']
 
     def __init__(self):

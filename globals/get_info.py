@@ -3,13 +3,13 @@ from globals.json_coding import *
 
 # Сделать класс
 
-def create_info_system():
+def create_info_system(file_name):
 
     oc = platform.system()
     username = os.getlogin()
     host = platform.node()
 
-    return {'oc': oc, 'username': username, 'host': host}
+    return {'oc': oc, 'username': username, 'host': host, 'file name': file_name}
 
 def write_info(absolute_path: str, sys_info: str) -> str:
 

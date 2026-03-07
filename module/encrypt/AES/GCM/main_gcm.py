@@ -7,9 +7,9 @@ from client.ui.clear_out import *
 
 from library.lib import os, sys, shutil
 
-from module.encrypt.AES.GCM.path import *
-from module.encrypt.AES.GCM.get_info import *
-from module.encrypt.AES.GCM.json_coding import *
+from globals.get_info import *
+from globals.json_coding import *
+from config.paths import *
 from module.encrypt.AES.GCM.KDF.pbkdf2 import *
 
 class MainAesCgm:
@@ -40,33 +40,39 @@ class MainAesCgm:
         # Проверяем файл
         if os.path.exists(add_file_path):
             if os.path.isfile(add_file_path):
-                for fi in os.path.split(add_file_path):
-                    # Получаем полное имя файла 
-                    get_file = str(fi)
+                get_file = os.path.basename(add_file_path)
 
                 print(f"\nDEBUG: получен файл ({get_file})")
                 time.sleep(0.5)
-                print(f"DEBUG: размер файла ({os.path.getsize(add_file_path)}B)")
+
+                # Высчитываем размер файла
+                get_size_file = os.path.getsize(add_file_path)
+
+                if get_size_file != 0:
+                    if get_size_file / 1024 >= 1:
+                        sizeK = f"{get_size_file / 1024:.2f}"
+                        sizeR = f"({sizeK} KB)"
+                    elif get_size_file / 1024 / 1024 >= 1:
+                        sizeMB = f"{get_size_file / 1024 / 1024:.2f}"
+                        sizeR = f"({sizeMB} MB)"
+                    elif get_size_file / 1024 < 1 or get_size_file / 1024 / 1024 < 1:
+                        sizeR = f"({get_size_file} B)"
+
+                print(f"DEBUG: размер файла {sizeR}")
+                time.sleep(1)
                     
                 try:
                     # Разбиваем имя файла на список и создаём имя для директории
-                    list_file = get_file.split(".")
-                    get_title_file = f"{list_file[0]}(E)"
-                    PATH_IS_DIRECTORY_FILE = os.path.join(PATH_DIRECTORY_FILES, get_title_file)
+                    title_file = get_file.split(".")[0] + "(E)"
+                    PATH_IS_DIRECTORY_FILE = os.path.join(PATH_DIRECTORY_FILES, title_file)
 
                     # Если такой директории нет, то работаем
                     if not os.path.exists(PATH_IS_DIRECTORY_FILE):
                         
-                        # Создаём директорию
                         os.mkdir(PATH_IS_DIRECTORY_FILE)
-                        # Получаем информацию и добавляем полное имя файла в файл с информацией
-                        system_info = create_info_system()
-                        system_info['file name'] = get_file
-                        # Кодируем в json
+                        system_info = create_info_system(get_file)
                         codding_json = run_json(state=1, value=system_info)
-                        # Получаем дескриптор, куда нужно записать этот файл с информацией
-                        desc_sys_file = os.path.join(PATH_DIRECTORY_FILES, get_title_file, 'system_info.json')
-                        # Вызываем функцию и передаём аргументы для записи файла
+                        desc_sys_file = os.path.join(PATH_DIRECTORY_FILES, title_file, 'system_info.json')
                         write_info(desc_sys_file, codding_json)
 
                         # Получаем дескрипторы для записи бинарных файлов (соль, хэш, ключ, зашифрованый файл)
@@ -74,8 +80,6 @@ class MainAesCgm:
                         get_path_pass_hash = os.path.join(PATH_IS_DIRECTORY_FILE, 'hash_pass.bin')
                         get_path_key = os.path.join(PATH_IS_DIRECTORY_FILE, 'aes_key.bin')
                         get_path_file_enc = os.path.join(add_file_path)
-
-                        press_enter = input(f"\nДалее...")
 
                         # Вызываем функцию хэширования и передаем дескрипторы
                         self.create_clear_out.clear()
@@ -93,30 +97,29 @@ class MainAesCgm:
                         set_nonce = self.__vectors.get('nonce', 'Ключ: nonce - не найден..')
                         aesgcm = AESGCM(set_key)
 
-                        print(f"\nDEBUG: устанавливаем ключ шифрования ({set_key})")
-                        time.sleep(0.5)
-                        print(f"DEBUG: устанавливаем случайные байты ({set_nonce})")
-                        time.sleep(1)
-
                         try:
                             with open(get_path_key, 'wb') as f_wb:
                                 f_wb.write(set_key)
 
                             with open(get_path_file_enc, 'rb') as f_rb:
-                                data = f_rb.read()
-                                print(f"DEBUG: длинна полученных данных ({len(data)})")
+                                if get_size_file >= 50000000:
+                                    for val in f_rb.read():
+                                        encrypt_text = "".join(aesgcm.encrypt(set_nonce, val, None))
+                                else:
+                                    data = f_rb.read()
 
-                            encrypt_text = aesgcm.encrypt(set_nonce, data, None)
+                                encrypt_text = aesgcm.encrypt(set_nonce, data, None)
 
                             with open(get_path_file_enc, 'wb') as f_wb:
                                 f_wb.write(set_nonce + encrypt_text)
                                 time.sleep(0.5)
-                                print(f"DEBUG: шифруем данные из файла ( {data} --- 010010110 )")
+                                print(f"\nDEBUG: шифруем данные из файла ( {data} --- 010010110 )")
 
+                            time.sleep(0.5)
+                            print("\n-------------------------------------")
+                            print(f"INFO: файл ({get_file}) - зашифрован!")
+                            print("-------------------------------------")
                             time.sleep(1)
-                            print(f"\nINFO: файл ({get_file}) - зашифрован")
-
-                            press_enter = input(f"\nДалее..\n")
 
                             self.create_clear_out.clear()
                             self.create_interface.create_logo()
@@ -125,7 +128,7 @@ class MainAesCgm:
                             print(f"Er: {err}")
 
                     else:
-                        print(f"\nERROR: файл с именем: {get_title_file} - уже зашифрован!")
+                        print(f"\nERROR: файл с именем: {title_file} - уже зашифрован!")
                         print(f"INFO: Выберите другой файл или измените название текущему файлу.\n")
                 except Exception as err:
                     print(f"ERROR: неожиданное исключение: {err}")    
@@ -146,6 +149,9 @@ class MainAesCgm:
 
         for fi in os.path.split(encrypt_file):
             get_file = str(fi)
+
+        print(f"\nDEBUG: получен файл ({get_file})")
+        time.sleep(0.5)
 
         list_file = get_file.split(".")
         get_title_file = list_file[0] + '(E)'
@@ -174,6 +180,9 @@ class MainAesCgm:
                 create_hash_obj = KDF_Pbkdf2(path_salt=get_salt, path_hash=get_origin_pass_hash)
                 result_in_hash = create_hash_obj.create_verify_hash_password(set_salt=origin_pass_salt, set_orig_hash=origin_pass_hash, set_password_confirm=confirm_password)
 
+                print(f"\nDEBUG: проверяем исходный хэш")
+                time.sleep(1)
+
                 if result_in_hash:
 
                     try:
@@ -189,6 +198,8 @@ class MainAesCgm:
                         print(f"Ошибка - файл {encrypt_file} не найден..")
 
                     aescgm = AESGCM(set_key)
+                    print(f"DEBUG: дешифруем файл ({get_file})")
+                    time.sleep(1)
 
                     try:
                         plaintext = aescgm.decrypt(nonce, encrypt_text, None)
@@ -200,17 +211,19 @@ class MainAesCgm:
 
                         self.create_clear_out.clear()
                         self.create_interface.create_logo()
-                        print("\nФайл успешно дешифрован!\n")
+                        print("\n-------------------------------------")
+                        print("\nINFO: Файл успешно дешифрован!\n")
+                        print("\n-------------------------------------")
 
                     except InvalidTag as er:
-                        print(f"При дешифровании файла произошла ошибка: {er}")
+                        print(f"\nПри дешифровании файла произошла ошибка: {er}\n")
                 else:
                     print(f"Ошибка - неверный пароль...")
 
             except Exception as er:
-                    print(f"При получении исходного хэша, произошла ошибка: {er}")
+                    print(f"\nПри получении исходного хэша, произошла ошибка: {er}\n")
         else:
-            print(f"Директория: {create_full_path} - не существует!")
+            print(f"\nДиректория: {create_full_path} - не существует!\n")
 
     def aescgm_interface(self):
 

@@ -50,8 +50,7 @@ class KDF_Pbkdf2:
                 f_wb.write(password_hash)
 
             print(f"\nINFO: хэш успешно записан в бинарный файл (hash_pass.bin)\n")
-
-            press_enter = input(f"Далее..")
+            time.sleep(1)
 
         except Exception as er:
             print("При записи файлов - произошла ошибка: {er}")
