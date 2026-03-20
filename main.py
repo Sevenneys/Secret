@@ -1,53 +1,32 @@
 from library.lib import time, sys, os, platform
 
-from client.ui.interface import *
-from client.ui.clear_out import *
 from module.encrypt.AES.GCM.main_gcm import *
-from config.objects import *
 from config.paths import *
 
-class RunMainProject:
+import argparse
 
-    VALID_MODE = ['0', '1', '2']
-
+class FlagParser:
     def __init__(self):
-        self._logo = None
-        self.__ui_result = None
+        self.parser = argparse.ArgumentParser(description='Secret -v.3.7.1- [Author by: seVen]')
+        self.parser.add_argument('-e', type=str, required=False, help='Data encryption')
+        self.parser.add_argument('-d', type=str, required=False, help='Data decryption')
+        self.parser.add_argument('-p', type=str, required=False, help='Set password for encrypt or decrypt')
+        
+        # Парсим аргументы при создании объекта
+        self.args = self.parser.parse_args()
 
-    def valid_out_user(self, func_param):
+class RunMainProject(FlagParser):
+    def valid_flags(self):
 
-        if self.__ui_result not in self.VALID_MODE:
-            print(f"\nERROR: неверная комманда...\n")
-            time.sleep(0.5)
-            create_clear_out.clear()
-            
-    def run_user_mode(self):
+        run_aesgcm = MainAesCgm()
 
-        self._logo = create_interface.create_logo()
-        self.__ui_result = create_interface.create_main_menu()
-        self.valid_out_user(self.__ui_result)
+        if self.args.e is not None:
+            run_aesgcm.encrypt(file=self.args.e, password=self.args.p)
+        elif self.args.d is not None:
+            run_aesgcm.decrypt(file=self.args.d, password=self.args.p)
 
-        if self.__ui_result == "0":
-            print(f"\nDEBUG: завершение программы..\n")
-            time.sleep(0.5)
-            create_clear_out.clear()
-            sys.exit()
-
-        elif self.__ui_result == "1":
-
-            create_aes_main = MainAesCgm()
-            create_clear_out.clear()
-            create_interface.create_logo()
-            create_aes_main.aescgm_interface()
-            create_clear_out.clear()
-
-        elif self.__ui_result == "2":
-            #запуск кодирования
-            print(f"Запускаем кодирование..")
 
 if __name__ == '__main__':
-
-    while True:
-        create_clear_out.clear()
-        create_main = RunMainProject().run_user_mode()
+    create_main = RunMainProject()
+    create_main.valid_flags()
 
