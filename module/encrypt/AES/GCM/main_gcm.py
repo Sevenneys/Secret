@@ -36,7 +36,8 @@ class MainAesCgm:
 
                 try:
                     # Разбиваем имя файла на список и создаём имя для директории
-                    title_file = get_file.split(".")[0] + "(E)"
+                    title_file = get_file.split(".")[0]
+                    path_to_file = os.path.split(add_file_path)[0] + '/'
                     PATH_IS_DIRECTORY_FILE = os.path.join(PATH_DIRECTORY_FILES, title_file)
 
                     # Если такой директории нет, то работаем
@@ -52,7 +53,8 @@ class MainAesCgm:
                         get_path_salt = os.path.join(PATH_IS_DIRECTORY_FILE, 'salt_pass.bin')
                         get_path_pass_hash = os.path.join(PATH_IS_DIRECTORY_FILE, 'hash_pass.bin')
                         get_path_key = os.path.join(PATH_IS_DIRECTORY_FILE, 'aes_key.bin')
-                        get_path_file_enc = os.path.join(add_file_path)
+
+                        get_path_file_enc = path_to_file + title_file + '.oxo'
 
                         # Вызываем функцию хэширования и передаем дескрипторы
                         create_hash_obj = KDF_Pbkdf2(path_salt=get_path_salt, path_hash=get_path_pass_hash, path_dir=PATH_IS_DIRECTORY_FILE)
@@ -70,23 +72,24 @@ class MainAesCgm:
                             with open(get_path_key, 'wb') as f_wb:
                                 f_wb.write(set_key)
 
-                            with open(get_path_file_enc, 'rb') as f_rb:
+                            with open(add_file_path, 'rb') as f_rb:
                             
                                 data = f_rb.read()
                                 encrypt_text = aesgcm.encrypt(set_nonce, data, None)
 
                             with open(get_path_file_enc, 'wb') as f_wb:
                                 f_wb.write(set_nonce + encrypt_text)
+                            os.remove(add_file_path)
 
-                                print("""             
+                            print("""             
 -1-0-1-0-1-0-1-0-1-0-1-0
 -0-1-0-1-0-1-0-1-0-1-0-1
 -1-0-1-0-1-0-1-0-1-0-1-0
 -0-1-0-1-0-1-0-1-0-1-0-1
-                                """)
-                                time.sleep(0.5)
+                            """)
+                            time.sleep(0.5)
 
-                                print(f"[DEBUG] --- FILE SUCCESSFULLY ENCRYPTED --- [DEBUG]\n")
+                            print(f"[DEBUG] --- FILE SUCCESSFULLY ENCRYPTED --- [DEBUG]\n")
 
                         except Exception as err:
                             shutil.rmtree(PATH_IS_DIRECTORY_FILE)
@@ -113,8 +116,18 @@ class MainAesCgm:
         time.sleep(0.5)
 
         list_file = get_file.split(".")
-        get_title_file = list_file[0] + '(E)'
+        get_title_file = list_file[0]
         create_full_path = os.path.join(PATH_DIRECTORY_FILES, get_title_file)
+
+        path_system_info = create_full_path + '/system_info.json'
+
+        with open(path_system_info, 'r+', encoding='utf-8') as r_w:
+            json_data = r_w.read()
+            decodding_data_systeminfo = run_json(state=0, value=json_data)
+
+        path_to_file = os.path.split(encrypt_file)[0] + '/'
+        origin_file = decodding_data_systeminfo.get('file name')
+        decrypt_file = path_to_file + origin_file
 
         if os.path.isdir(create_full_path):
 
@@ -144,24 +157,26 @@ class MainAesCgm:
                             nonce = get_full_data[:12]
                             encrypt_text = get_full_data[12:]
 
-                    except Exception as er:
-                        print(f"[WARNING] --- THE SPECIFIED FILE WAS NOT FOUND --- [WARNING]")
+                        aescgm = AESGCM(set_key)
 
-                    aescgm = AESGCM(set_key)
-                    print("""             
+                        print("""             
 -A-b-C-d-E-f-G-i-L-k-M-n
 -0-1-2-3-4-5-6-7-8-9-!--
 -@-#-$-%-^-&-*-(-)-;-:-'
 -А-б-В-г-Д-е-Ж-з-Н-о-К-л
-                    """)
-                    time.sleep(0.5)
+                        """)
+                        time.sleep(0.5)
+
+                    except Exception as er:
+                        print(f"\n[WARNING] --- THE SPECIFIED FILE WAS NOT FOUND --- [WARNING]")
 
                     try:
                         plaintext = aescgm.decrypt(nonce, encrypt_text, None)
 
-                        with open(encrypt_file, "wb") as f_wb:
+                        with open(decrypt_file, "wb") as f_wb:
                             f_wb.write(plaintext)
 
+                        os.remove(encrypt_file)
                         shutil.rmtree(create_full_path)
 
                         print(f"[DEBUG] --- FILE SUCCESSFULLY DECRYPTED --- [DEBUG]\n")
